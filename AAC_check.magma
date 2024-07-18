@@ -1,0 +1,29 @@
+ function AAC_check(F,f,p)
+// (Given the exact constant field F) This checks if the pair (f,p) satisfies the AAC Conjecture and outputs that as a boolean value.
+// Moreover, outputs a,b s.t. the Fundamental Unit is given as a+b*sqrt(f). Also the order of the prime ideal in the ideal class group is computed.
+        if not(IsIrreducible(p)) then
+                error("p must be irreducible");
+        end if;
+        R<t>:=PolynomialRing(F);
+        C:=HyperellipticCurve(f);
+        J:=Jacobian(C);
+        K<x,y>:=FunctionField(C);
+        O:=CoordinateRing(C);
+        S:=Zeros(C,Evaluate(p,x));
+        D:=S[1];
+        P:=Points(C)[1];
+        Pplace:=Place(P);
+        D1:=-D+Degree(D)*Pplace;
+        pt:=JacobianPoint(J,D1);
+        m:=Order(pt);
+        AFF<Y>,toAlgFF := AlgorithmicFunctionField(K);
+        V,phi := RiemannRochSpace(FunctionFieldDivisor(m*E1));
+        bas := Basis(V);
+        gamma := phi(bas[1]);
+        toCrvFF := Inverse(toAlgFF);
+        yAlgFF := toAlgFF(y);
+        b := Eltseq(gamma)[2];
+        quotient, remainder := Quotrem(R!b,R!f);
+        AAC_true := not (remainder eq 0);
+        return AAC_true, Eltseq(gamma)[1], Eltseq(gamma)[2],m;
+end function;
