@@ -1,0 +1,16 @@
+function ClassFieldGroups(C)
+    // Given a hyperelliptic curve C: y^2=f(x) over a finite field, this outputs (O_K/<f>)^x, Cl_f(K), Cl(K), with K=k(C).
+    f:=HyperellipticPolynomials(C);
+    S:=Zeros(C,f);
+    tuples:=[];
+    for i in [1..#S] do
+            tuples:=Append(tuples,<S[i],2>);
+    end for;
+    E:=Divisor(tuples);
+    E:=FunctionFieldDivisor(E);
+    J:=Jacobian(C);
+    A:=RayResidueRing(E);
+    B:=TorsionSubgroup(RayClassGroup(E));
+    F:=AbelianGroup(J);
+    return A,B,F;
+end function;
